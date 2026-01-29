@@ -536,9 +536,9 @@
             </div>
 
             <div class="final-list">
-                Matemáticamente funcionó perfecto. <br>
+                ¡Combinación exitosa! <br>
                 Nadie se regaló a sí mismo. <br>
-                ¡Disfruten la fiesta! 🍷
+                ¡Disfruten el intercambio! 🎁
             </div>
 
             <button class="btn-main" style="margin-top:20px; background:var(--background); color:var(--text-secondary);"
@@ -554,6 +554,16 @@
         let participants = [];
         let assignments = []; // Array of { giver: "A", receiver: "B" }
         let currentTurn = 0;
+
+        // Sound Effect (Simple "Pop" / Magic Ding)
+        // Short base64 magic chime
+        const magicSound = new Audio("data:audio/wav;base64,UklGRj4BAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YREBAACAgICAgICAgICAgICAgICAgICAgICAf39/f39/f399fX19fX19fXp6enp6enp6dnZ2dnZ2dnZxcXFxcXFxcW1tbW1tbW1tZ2dnZ2dnZ2dgYGBgYGBgYFpaWlpaWlpaVlZWVlZWVlZSUlJSUlJSUk9PT09PT09PTExMTExMTExISEhISEhISEBERERERERERA4ODg4ODg4OAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAAf/8AAH//AAB//wAD/w==");
+        // Note: The above is a very short placeholder click. For a real magic sound, we need a longer base64 string.
+        // Let's use a slightly longer "clean" chime base64 for better effect.
+        const chime = new Audio("data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMbXZoAAAAzQAAAAEAAAAHAAEA//uQZAAACBgW0AAABAAAAAAAAAAAAAAABAAEA//uQZAAACBgW0AAABAAAAAAAAAAAAAAABAAEA//uQZAAACBgW0AAABAAAAAAAAAAAAAAABAAEA//uQZAAACBgW0AAABAAAAAAAAAAAAAAABAAEA");
+        // Actually, to ensure quality without bloating the file, let's use a public CDN link for a pleasant sound.
+        const revealSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); // "Bubbles" or soft magic sound
+        revealSound.volume = 0.5;
 
         // DOM Elements
         const setupStage = document.getElementById('setup-stage');
@@ -665,10 +675,24 @@
 
         function toggleSecret() {
             const box = document.getElementById('secretBox');
-            box.classList.toggle('revealed');
 
-            if (box.classList.contains('revealed')) {
+            // Only toggle if not already revealed
+            if (!box.classList.contains('revealed')) {
+                box.classList.add('revealed');
+
+                // Sound
+                revealSound.currentTime = 0;
+                revealSound.play().catch(e => console.log("Audio play failed (user interaction needed first)"));
+
+                // Vibration (200ms)
+                if (navigator.vibrate) {
+                    navigator.vibrate(200);
+                }
+
+                // Confetti for the magic feel
                 confetti({ particleCount: 30, spread: 50, origin: { y: 0.7 }, disableForReducedMotion: true });
+            } else {
+                box.classList.remove('revealed');
             }
         }
 
